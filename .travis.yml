@@ -1,11 +1,30 @@
 language: objective-c
-xcode_project: FFTravis.xcodeproj 
-xcode_scheme: FFTravis
+cache: cocoapods
+podfile: Podfile
 osx_image: xcode11.3
-
+xcode_project: FFTravis.xcodeproj
+xcode_scheme: FFTravis
+before_install:
+- brew update
+- gem install cocoapods
+- gem install fir-cli
+- pod repo update
+- pod install
+before_script:
+- "./scripts/add-key.sh"
 script:
-- set -o pipefail
-- xcodebuild test -project "$TRAVIS_XCODE_PROJECT" -scheme "$TRAVIS_XCODE_SCHEME" -destination "name=iPhone X" -enableCodeCoverage YES | xcpretty
-
+- travis_wait 60 ./scripts/travis.sh
 after_success:
-- bash <(curl -s https://codecov.io/bash)
+- "./scripts/sign-and-upload.sh"
+after_script:
+- "./scripts/remove-key.sh"
+env:
+  global:
+  - APP_NAME="FFTravis"
+  - 'DEVELOPER_NAME="Apple Distribution: NEWLINE INTERACTIVE, INC. (QWGZS87F5T)"'
+  - PROFILE_NAME="ad_hoc"
+  # KEY_PASSWORD
+  - secure: NKWPaAGWU35LBYOwZhjT+a2daZ6nK3kxLqkm9zenO9rgbVsC72ArL4ZCVdDNxrsSqCHToq5tfQt7WNk5C/LFUU3seU1koVnHcmVAyr6PBjuG+nCDdZbuCejai7+MxHfJbfWM/cOY2/m2Il/kFEsOhmdcCKJGW12175dAHsB7iBi1IvtgfjQAG678s6KUjhr5G4/7ze/idsifyJGc4g6t6Fta97zx63jF0P4hgCAnPBu8Va2ixgTBuiP/dTxSyP/y6vpfbtOgtxmE5+08OHnFE+bkTHerhu8xpevZj6eR3LDBAk61Dx/SgTgwaUPmeSaBlqfsTRFXGnAhdcDA+88CBXmDErWsxDk2lLLN+D7TrgfWanZ1JnaOl0jmGdROC1Bto1OrnicNhBqY0IAapGLfQaldXzf+Jyeegg+MgGaL/2XkNq4ZOhI6OdyktSOIn9l+6S92yamCX3dLCeyHSXDMKE4AZQZu9lLXO4Io8ZR5VYsU20FuQ5NbvdFCPJZlNZdcbL9VXwB3xHMUMFVmJNrAbYrLSQsUNv7iIdQ6/aKZU7SnMHciduNOKk0OV/2XkOoqBc883DmW1aaYySDqyX1wfbSwPpOPmWoarmQXXrZskksUvUgIB5J4Lki/xr4pSnIacTzOMtQEUhHPMSFwMQI3eXuRxlwMfI5HjXtDficTKpA=
+  # ENCRYPTION_SECRET
+  - secure: vrKMyAv29Z1Ekb1IubMh7MdNQ9+6KtjYTIf/4Fs7b9xoeYyFacWaWbWZ3HeTWE2d5AdwvP+03tN451sajuvvdtmMbS/G60dKiYMrW00xVNcNu6kXdFHWqUM4u7vlZcVa0gSXsayOfNOJBIGCnnrt22E+GsEDBTn8jtWsTWEy5+AvRJQCUCZAL42lfHnBhMnEhwjzAh5VvfaEFV+RYWt5Njwfz72TslYcpVWb04deWjjzeCGkEhW0ZzBGYVRhucT6e6qdaS8t9uthiq1DxKU56VIP0PPSQAX8DnyPUa2rOticksOEtbsxtffYinx2WVFBvDNLFS66NyN9rt9oCLKsy218U5zXhO9h7HPl9b7zYfdZSZBaIssmYFjBUxPOJu4GbBTjUDnmQqImzLeJq/3URpIa6saBk/zvqSeeaNorrqZfnPrSUXxOJgIHNvg9ilgj24fyVs0Q9/cscCU7bZZZTnm8z5B9UQcn9rwHXRadpV/96O0dzClkuaD0wGmGUNvxPznUsQylEfBtNQkEOHP0iY5CZO2zWXN6sPvvzSEtBOXOsMLoeKC6DbwtH1+YvyUWlHexSj7NrRh+FtANLAOsfCRKVhCmW/aXjPBjRKUAZ5mxV5yY7covRtljVIpDPCeTrsw5+Fyl5EJ0Yc8JTYwX9konv1VjvJltPTm3AjRYTEU=
+  
