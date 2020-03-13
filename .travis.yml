@@ -1,9 +1,11 @@
 language: objective-c
+xcode_project: FFTravis.xcodeproj 
+xcode_scheme: FFTravis
 osx_image: xcode11.3
 
 script:
-  - xctool -workspace FFTravis.xcworkspace -scheme FFTravis -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
-  - xctool test -workspace FFTravis.xcworkspace -scheme FFTravisTests -sdk iphonesimulator ONLY_ACTIVE_ARCH=NO
+- set -o pipefail
+- xcodebuild test -project "$TRAVIS_XCODE_PROJECT" -scheme "$TRAVIS_XCODE_SCHEME" -destination "name=iPhone X" -enableCodeCoverage YES | xcpretty
 
 after_success:
 - bash <(curl -s https://codecov.io/bash)
