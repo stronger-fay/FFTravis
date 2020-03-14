@@ -13,7 +13,7 @@ before_install:
 before_script:
 - "./scripts/add-key.sh"
 script:
-- travis_wait 60 ./scripts/travis.sh
+- "travis_wait 60 ./scripts/travis.sh"
 after_success:
 - "./scripts/sign-and-upload.sh"
 after_script:
