@@ -5,10 +5,10 @@ osx_image: xcode11.3
 xcode_project: FFTravis.xcodeproj
 xcode_scheme: FFTravis
 before_install:
-- brew update
-- gem install cocoapods
-- gem install fir-cli
-- pod repo update
+# - brew update
+# - gem install cocoapods
+# - gem install fir-cli
+# - pod repo update
 - pod install
 before_script:
 - "./scripts/add-key.sh"
